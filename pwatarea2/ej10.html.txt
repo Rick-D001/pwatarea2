@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Juego de Preguntas y Respuestas</title>
+<style>
+  body {
+    font-family: sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  .quiz-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .pregunta {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 15px;
+  }
+
+  .opciones-container {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+
+  .opciones-container li {
+    margin-bottom: 10px;
+  }
+
+  .opcion-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1em;
+    color: #333;
+    transition: background-color 0.3s ease;
+  }
+
+  .opcion-btn:hover {
+    background-color: #e0e0e0;
+  }
+
+  .correcto {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+  }
+
+  .incorrecto {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+  }
+
+  #siguiente-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }
+
+  #siguiente-btn:hover {
+    background-color: #0056b3;
+  }
+
+  #resultado {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    color: #28a745;
+  }
+
+  .oculto {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <h1>Juego de Preguntas</h1>
+    <div id="pregunta-container">
+      <p id="pregunta" class="pregunta"></p>
+      <ul id="opciones" class="opciones-container">
+        </ul>
+    </div>
+    <button id="siguiente-btn" class="oculto">Siguiente Pregunta</button>
+    <div id="resultado" class="oculto"></div>
+  </div>
+
+  <script>
+    const preguntaElement = document.getElementById('pregunta');
+    const opcionesElement = document.getElementById('opciones');
+    const siguienteBtn = document.getElementById('siguiente-btn');
+    const resultadoElement = document.getElementById('resultado');
+    const preguntaContainer = document.getElementById('pregunta-container');
+
+    const preguntas = [
+      {
+        pregunta: "¿Cuál es la capital de Ecuador?",
+        opciones: ["Guayaquil", "Quito", "Cuenca", "Ambato"],
+        respuestaCorrecta: "Quito"
+      },
+      {
+        pregunta: "¿En qué año se descubrió América?",
+        opciones: ["1492", "1500", "1620", "1776"],
+        respuestaCorrecta: "1492"
+      },
+      {
+        pregunta: "¿Cuál es el río más largo del mundo?",
+        opciones: ["Nilo", "Amazonas", "Yangtsé", "Misisipi"],
+        respuestaCorrecta: "Amazonas"
+      }
+      // Puedes añadir más preguntas aquí
+    ];
+
+    let preguntaActualIndex = 0;
+    let puntuacion = 0;
+
+    function mostrarPregunta() {
+      resetOpciones();
+      const preguntaActual = preguntas[preguntaActualIndex];
+      preguntaElement.textContent = preguntaActual.pregunta;
+
+      preguntaActual.opciones.forEach((opcion, index) => {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.textContent = opcion;
+        button.classList.add('opcion-btn');
+        button.addEventListener('click', () => seleccionarRespuesta(opcion));
+        li.appendChild(button);
+        opcionesElement.appendChild(li);
+      });
+
+      siguienteBtn.classList.add('oculto');
+    }
+
+    function seleccionarRespuesta(respuestaSeleccionada) {
+      const preguntaActual = preguntas[preguntaActualIndex];
+      const botonesOpciones = opcionesElement.querySelectorAll('.opcion-btn');
+
+      botonesOpciones.forEach(button => {
+        button.disabled = true;
+        if (button.textContent === preguntaActual.respuestaCorrecta) {
+          button.classList.add('correcto');
+        }
+        if (button.textContent === respuestaSeleccionada && respuestaSeleccionada !== preguntaActual.respuestaCorrecta) {
+          button.classList.add('incorrecto');
+        }
+      });
+
+      if (respuestaSeleccionada === preguntaActual.respuestaCorrecta) {
+        puntuacion++;
+      }
+
+      if (preguntaActualIndex < preguntas.length - 1) {
+        siguienteBtn.classList.remove('oculto');
+      } else {
+        mostrarResultado();
+      }
+    }
+
+    function siguientePregunta() {
+      preguntaActualIndex++;
+      if (preguntaActualIndex < preguntas.length) {
+        mostrarPregunta();
+      } else {
+        mostrarResultado();
+      }
+    }
+
+    function mostrarResultado() {
+      preguntaContainer.classList.add('oculto');
+      siguienteBtn.classList.add('oculto');
+      resultadoElement.textContent = `Tu puntuación final es: ${puntuacion} de ${preguntas.length}`;
+      resultadoElement.classList.remove('oculto');
+    }
+
+    function resetOpciones() {
+      while (opcionesElement.firstChild) {
+        opcionesElement.removeChild(opcionesElement.firstChild);
+      }
+    }
+
+    siguienteBtn.addEventListener('click', siguientePregunta);
+
+    // Iniciar el juego
+    mostrarPregunta();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculadora Simple</title>
+<style>
+  .calculadora {
+    width: 300px;
+    margin: 50px auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #f0f0f0;
+  }
+
+  #display {
+    width: 100%;
+    padding: 15px;
+    font-size: 24px;
+    text-align: right;
+    border: none;
+    background-color: #e0e0e0;
+    box-sizing: border-box;
+  }
+
+  .botones {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  button {
+    padding: 15px;
+    font-size: 20px;
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #ddd;
+  }
+
+  .operador {
+    background-color: #f9a825; /* Naranja */
+    color: white;
+  }
+
+  .operador:hover {
+    background-color: #e65100;
+  }
+
+  .igual {
+    grid-column: span 2;
+    background-color: #4CAF50; /* Verde */
+    color: white;
+  }
+
+  .igual:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+
+  <div class="calculadora">
+    <input type="text" id="display" value="0" readonly>
+    <div class="botones">
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="deleteLast()">←</button>
+      <button class="operador" onclick="appendToDisplay('/')">/</button>
+      <button onclick="appendToDisplay('7')">7</button>
+      <button onclick="appendToDisplay('8')">8</button>
+      <button onclick="appendToDisplay('9')">9</button>
+      <button class="operador" onclick="appendToDisplay('*')">*</button>
+      <button onclick="appendToDisplay('4')">4</button>
+      <button onclick="appendToDisplay('5')">5</button>
+      <button onclick="appendToDisplay('6')">6</button>
+      <button class="operador" onclick="appendToDisplay('-')">-</button>
+      <button onclick="appendToDisplay('1')">1</button>
+      <button onclick="appendToDisplay('2')">2</button>
+      <button onclick="appendToDisplay('3')">3</button>
+      <button class="operador" onclick="appendToDisplay('+')">+</button>
+      <button onclick="appendToDisplay('0')">0</button>
+      <button onclick="appendToDisplay('.')">.</button>
+      <button class="igual" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let display = document.getElementById('display');
+    let currentInput = '';
+    let operator = null;
+    let firstOperand = null;
+
+    function appendToDisplay(value) {
+      if (display.value === '0' && value !== '.') {
+        display.value = value;
+        currentInput = value;
+      } else {
+        display.value += value;
+        currentInput += value;
+      }
+    }
+
+    function clearDisplay() {
+      display.value = '0';
+      currentInput = '';
+      operator = null;
+      firstOperand = null;
+    }
+
+    function deleteLast() {
+      display.value = display.value.slice(0, -1);
+      currentInput = currentInput.slice(0, -1);
+      if (display.value === '') {
+        display.value = '0';
+        currentInput = '';
+      }
+    }
+
+    function setOperator(op) {
+      if (currentInput === '') return;
+      if (firstOperand !== null) {
+        calculate();
+      }
+      firstOperand = parseFloat(currentInput);
+      operator = op;
+      currentInput = '';
+      display.value += op;
+    }
+
+    function calculate() {
+      if (operator === null || firstOperand === null || currentInput === '') return;
+      let secondOperand = parseFloat(currentInput);
+      let result;
+      switch (operator) {
+        case '+':
+          result = firstOperand + secondOperand;
+          break;
+        case '-':
+          result = firstOperand - secondOperand;
+          break;
+        case '*':
+          result = firstOperand * secondOperand;
+          break;
+        case '/':
+          if (secondOperand === 0) {
+            result = '¡Error!';
+          } else {
+            result = firstOperand / secondOperand;
+          }
+          break;
+        default:
+          return;
+      }
+      display.value = result;
+      currentInput = String(result);
+      operator = null;
+      firstOperand = null;
+    }
+
+    // Reemplazamos las llamadas individuales a setOperator por appendToDisplay para mostrar el operador en el display
+    function appendToDisplay(value) {
+      if (display.value === '0' && value !== '.') {
+        display.value = value;
+        currentInput = value;
+      } else {
+        display.value += value;
+        currentInput += value;
+      }
+      // Actualizamos la lógica para el operador aquí
+      if (['+', '-', '*', '/'].includes(value)) {
+        if (currentInput.length > 1 && firstOperand === null) {
+          firstOperand = parseFloat(currentInput.slice(0, -1));
+          operator = value;
+          currentInput = '';
+        } else if (firstOperand !== null && currentInput !== '') {
+          calculate();
+          firstOperand = parseFloat(display.value);
+          operator = value;
+          currentInput = '';
+          display.value += value;
+        } else if (firstOperand === null) {
+          firstOperand = parseFloat(currentInput.slice(0, -1));
+          operator = value;
+          currentInput = '';
+          display.value += value;
+        }
+      }
+    }
+
+    // Modificamos la función calculate para que funcione con la entrada directa del operador en el display
+    function calculate() {
+      if (display.value.includes('+')) {
+        const [num1, num2] = display.value.split('+').map(parseFloat);
+        display.value = num1 + num2;
+      } else if (display.value.includes('-')) {
+        const [num1, num2] = display.value.split('-').map(parseFloat);
+        display.value = num1 - num2;
+      } else if (display.value.includes('*')) {
+        const [num1, num2] = display.value.split('*').map(parseFloat);
+        display.value = num1 * num2;
+      } else if (display.value.includes('/')) {
+        const [num1, num2] = display.value.split('/').map(parseFloat);
+        if (num2 === 0) {
+          display.value = '¡Error!';
+        } else {
+          display.value = num1 / num2;
+        }
+      }
+      currentInput = display.value;
+      operator = null;
+      firstOperand = null;
+    }
+  </script>
+
+</body>
+</html>

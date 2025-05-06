@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Menú Navegación Desplegable</title>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 0;
+  }
+
+  nav {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+  }
+
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  nav > ul > li {
+    position: relative;
+  }
+
+  nav > ul > li > a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+  }
+
+  nav > ul > li:hover > a {
+    background-color: #555;
+  }
+
+  .submenu {
+    display: none; /*Oculto defecto*/
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #444;
+    border: 1px solid #555;
+    border-top: none;
+    min-width: 150px;
+    z-index: 10; /*Asegurar que esté sobre otros elementos*/
+  }
+
+  .submenu li a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: white;
+  }
+
+  .submenu li:hover a {
+    background-color: #666;
+  }
+</style>
+</head>
+<body>
+
+  <nav>
+    <ul>
+      <li><a href="#">Inicio</a></li>
+      <li class="menu-item">
+        <a href="#">Productos</a>
+        <ul class="submenu">
+          <li><a href="#">Electrónica</a></li>
+          <li><a href="#">Ropa</a></li>
+          <li><a href="#">Libros</a></li>
+        </ul>
+      </li>
+      <li class="menu-item">
+        <a href="#">Servicios</a>
+        <ul class="submenu">
+          <li><a href="#">Consultoría</a></li>
+          <li><a href="#">Soporte Técnico</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <script>
+    const menuItems = document.querySelectorAll('.menu-item');
+
+    menuItems.forEach(item => {
+      const link = item.querySelector('a');
+      const submenu = item.querySelector('.submenu');
+
+      if (submenu) {
+        link.addEventListener('click', function(event) {
+          event.preventDefault(); // Evitar que el enlace navegue
+          submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+
+          //Ocultar otros submenús abiertos
+          menuItems.forEach(otherItem => {
+            if (otherItem !== item && otherItem.querySelector('.submenu') && otherItem.querySelector('.submenu').style.display === 'block') {
+              otherItem.querySelector('.submenu').style.display = 'none';
+            }
+          });
+        });
+      }
+    });
+
+    // Ocultar los submenús al hacer clic fuera del menú
+    document.addEventListener('click', function(event) {
+      const isClickInside = event.target.closest('nav');
+      if (!isClickInside) {
+        menuItems.forEach(item => {
+          const submenu = item.querySelector('.submenu');
+          if (submenu) {
+            submenu.style.display = 'none';
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

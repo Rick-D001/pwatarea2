@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cambio de Imagen al Pasar el Ratón</title>
+<style>
+  #miImagen {
+    width: 200px;
+    height: auto;
+    border: 1px solid #ccc;
+    transition: opacity 0.3s ease-in-out; /*Transición suave opacidad*/
+  }
+
+  #miImagen:hover {
+    opacity: 0.8; /*Ligeramente transparente al pasar el ratón*/
+  }
+</style>
+</head>
+<body>
+
+  <img id="miImagen" src="imagen1.jpg" alt="Imagen Inicial">
+
+  <script>
+    const imagen = document.getElementById('miImagen');
+    const imagenOriginalSrc = 'imagen1.jpg';
+    const imagenNuevaSrc = 'imagen2.jpg';
+
+    imagen.addEventListener('mouseover', function() {
+      imagen.src = imagenNuevaSrc;
+    });
+
+    imagen.addEventListener('mouseout', function() {
+      imagen.src = imagenOriginalSrc;
+    });
+  </script>
+
+</body>
+</html>

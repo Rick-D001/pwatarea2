@@ -1,0 +1,21 @@
+const horaManecilla = document.getElementById('hora');
+const minutoManecilla = document.getElementById('minuto');
+const segundoManecilla = document.getElementById('segundo');
+
+function actualizarReloj() {
+  const ahora = new Date();
+  const segundos = ahora.getSeconds();
+  const minutos = ahora.getMinutes();
+  const horas = ahora.getHours();
+
+  const segundosGrados = ((segundos / 60) * 360) + 90;
+  const minutosGrados = ((minutos / 60) * 360) + ((segundos / 60) * 6) + 90;
+  const horasGrados = ((horas / 12) * 360) + ((minutos / 60) * 30) + 90;
+
+  segundoManecilla.style.transform = `translateX(-50%) rotate(${segundosGrados}deg)`;
+  minutoManecilla.style.transform = `translateX(-50%) rotate(${minutosGrados}deg)`;
+  horaManecilla.style.transform = `translateX(-50%) rotate(${horasGrados}deg)`;
+}
+
+setInterval(actualizarReloj, 1000);
+actualizarReloj();

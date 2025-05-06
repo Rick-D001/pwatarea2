@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Lista Tareas</title>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+
+  .container {
+    width: 400px;
+    margin: 50px auto;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  #input-tarea {
+    width: calc(100% - 80px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  #btn-agregar {
+    padding: 10px 15px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+  }
+
+  #btn-agregar:hover {
+    background-color: #4cae4c;
+  }
+
+  #lista-tareas {
+    margin-top: 20px;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  #lista-tareas li {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tarea-texto {
+    flex-grow: 1;
+  }
+
+  .btn-eliminar {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+  }
+
+  .btn-eliminar:hover {
+    background-color: #c9302c;
+  }
+</style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Lista de Tareas</h2>
+    <div>
+      <input type="text" id="input-tarea" placeholder="Añadir nueva tarea...">
+      <button id="btn-agregar">Agregar</button>
+    </div>
+    <ul id="lista-tareas">
+      </ul>
+  </div>
+
+  <script>
+    const inputTarea = document.getElementById('input-tarea');
+    const btnAgregar = document.getElementById('btn-agregar');
+    const listaTareas = document.getElementById('lista-tareas');
+
+    btnAgregar.addEventListener('click', agregarTarea);
+    inputTarea.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        agregarTarea();
+      }
+    });
+
+    function agregarTarea() {
+      const textoTarea = inputTarea.value.trim();
+      if (textoTarea !== '') {
+        const nuevaTarea = document.createElement('li');
+        nuevaTarea.innerHTML = `
+          <span class="tarea-texto">${textoTarea}</span>
+          <button class="btn-eliminar">Eliminar</button>
+        `;
+
+        // Agregar funcionalidad para eliminar la tarea recién creada
+        const btnEliminar = nuevaTarea.querySelector('.btn-eliminar');
+        btnEliminar.addEventListener('click', eliminarTarea);
+
+        listaTareas.appendChild(nuevaTarea);
+        inputTarea.value = ''; // Limpiar el input después de agregar
+      }
+    }
+
+    function eliminarTarea(event) {
+      const tareaAEliminar = event.target.parentNode; // El botón es hijo del LI
+      listaTareas.removeChild(tareaAEliminar);
+    }
+  </script>
+
+</body>
+</html>

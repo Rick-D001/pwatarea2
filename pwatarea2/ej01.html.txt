@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Cambio de Estilo al Clic</title>
+<style>
+  #MiElemento {
+    background-color: lightblue;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    transition: background-color 0.5s ease; /* Para una transición suave */
+  }
+
+  .boton-estilizado {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+
+  .boton-estilizado:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+
+  <div id="MiElemento">
+    ¡Este es el elemento que cambiará de color!
+  </div>
+
+  <button id="miBoton" class="boton-estilizado">
+    ¡Haz clic para cambiar el fondo!
+  </button>
+
+  <script>
+    const boton = document.getElementById('miBoton');
+    const elemento = document.getElementById('miElemento');
+    const colores = ['lightcoral', 'lightgreen', 'lightskyblue', 'lightgoldenrodyellow'];
+    let indiceColor = 0;
+
+    boton.addEventListener('click', function() {
+      elemento.style.backgroundColor = colores[indiceColor];
+      indiceColor = (indiceColor + 1) % colores.length; // Ciclar entre los colores
+    });
+  </script>
+
+</body>
+</html>

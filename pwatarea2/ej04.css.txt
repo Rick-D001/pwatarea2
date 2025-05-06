@@ -1,0 +1,24 @@
+.manecilla-imagen {
+  position: absolute;
+  width: 50%; /*Ajusta según el tamaño de tu imagen*/
+  height: auto; /*Mantener la proporción*/
+  top: 50%;
+  transform-origin: center bottom; /*Rotar desde la parte inferior central*/
+  /*Ajusta left para centrar la base de la manecilla*/
+  left: 50%;
+  transform: translateX(-50%) rotate(0deg); /*Centrar y rotación inicial*/
+}
+
+#hora {
+  /*Ajusta el tamaño y la posición específica si es necesario*/
+  width: 35%;
+  /*Ajusta el desplazamiento left si es necesario*/
+}
+
+#minuto {
+  width: 40%;
+}
+
+#segundo {
+  width: 45%;
+}
